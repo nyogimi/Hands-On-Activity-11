@@ -1,0 +1,63 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: epel-release download
+    yum:
+      name:
+        - epel-release
+    when: ansible_distribution == "CentOS"
+
+  - name: Update and Upgrade (CentOS Server)
+    yum:
+      update_cache: yes
+      update_only: yes
+    when: ansible_distribution == "CentOS"
+
+  - name: Update and Upgrade (Ubuntu Sever)
+    apt:
+      update_cache: yes
+      upgrade: dist
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: web_servers
+  become: true
+
+  - name: Installing Docker (Ubuntu Server)
+    apt:
+      name:
+        - docker.io
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+
+  - name: Installing Docker (CentOS Server)
+    dnf:
+      name:
+        - docker.io
+      state: yes
+      update_cache: yes
+    when: ansible_distribution
+
+- hosts: db_servers
+  become: true
+
+  - name: Installing Docker (Ubuntu Server)
+    apt:
+      name:
+        - docker.io
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+
+  - name: Installing Docker (CentOS Server)
+    dnf:
+      name:
+        - docker.io
+      state: yes
+      update_cache: yes
+    when: ansible_distribution
